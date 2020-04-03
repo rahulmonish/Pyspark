@@ -28,6 +28,9 @@ print(df.describe().show())
 df.select('_c0')  #Returns as a dataframe
 df['_c0']       #Returns as a column object
 df.select(['_c0','_c1'])
+
+#get distinct values from a column
+df.select('age').distinct().show()
 #We shoudl use select most of the time since it returns a dataframe
 
 #Creates new column new_c0 with the data of df['_c0']
@@ -63,3 +66,22 @@ df.filter( (df['age']>10) & (df['age']<20)).show()
 #collect the data into another variable using collect method; it returns a list
 result = df.filter( (df['age']>10) & (df['age']<20)).collect()
 type(result)
+
+
+
+#GroupBy conditions
+df.groupBy('age').sum().show()
+df.select('age').show()
+
+
+#Additional functions
+from pyspark.sql.functions import format_number, stddev
+#find std of column age and give the column another name
+result=  df.select(stddev('age').alias('new_age'))
+#convert decimal to 2 digits
+result.select(format_number('new_age',2)).show()
+
+#ascending order
+df.orderBy('age')
+#descending order
+df.orderBy(df['age'].desc())
